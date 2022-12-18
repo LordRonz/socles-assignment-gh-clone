@@ -2,6 +2,8 @@
 
 Deployed URL: [https://socles-assignment-gh-clone.vercel.app/](https://socles-assignment-gh-clone.vercel.app/)
 
+To search, type in the search bar at the top, then press ENTER.
+
 Features:
 
 1. Repo Search
