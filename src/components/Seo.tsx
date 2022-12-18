@@ -3,11 +3,13 @@ import { useRouter } from 'next/router';
 
 const defaultMeta = {
   title: 'GitHub Clone',
-  siteName: process.env.NEXT_PUBLIC_HOSTNAME || 'lordronz.github.io',
+  siteName:
+    process.env.NEXT_PUBLIC_HOSTNAME ||
+    'https://socles-assignment-gh-clone.vercel.app',
   description: 'Socles Software Engineer Intern Assignment.',
   url: process.env.NEXT_PUBLIC_HOSTNAME
     ? `https://${process.env.NEXT_PUBLIC_HOSTNAME}`
-    : 'https://lordronz.github.io',
+    : 'https://socles-assignment-gh-clone.vercel.app',
   image: '/vercel.svg',
   type: 'website',
   robots: 'follow, index',

@@ -8,9 +8,11 @@ import useSWR from 'swr';
 
 import RepoListItem from '@/components/Card/RepoListItem';
 import TopicCard from '@/components/Card/TopicCard';
+import GitHubCheck from '@/components/icons/GitHubCheck';
 import Header from '@/components/layout/Header';
 import GitHubLink from '@/components/links/GitHubLink';
 import SideNavLink from '@/components/links/SideNavLink';
+import Pagination from '@/components/Pagination';
 import Seo from '@/components/Seo';
 import SideNavTag from '@/components/tag/SideNavTag';
 import clsxm from '@/lib/clsxm';
@@ -50,6 +52,7 @@ const HomePage: NextPage = () => {
   const [sortBy, setSortBy] = useState<string>();
   const [sortOrder, setSortOrder] = useState<string>();
   const [activeSort, setActiveSort] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
 
   const { data: repos } = useSWR<RepoSearchResponse>(
     searchInput
@@ -60,6 +63,7 @@ const HomePage: NextPage = () => {
             per_page: '10',
             ...(sortBy && { sort: sortBy }),
             ...(sortOrder && { order: sortOrder }),
+            page,
           },
         })
       : null
@@ -120,7 +124,7 @@ const HomePage: NextPage = () => {
             </div>
             <div className='float-left w-full px-2 pt-4 md:w-9/12 md:pt-0 '>
               <div className='px-2'>
-                {topics?.items.length && !!(topics?.items.length > 0) && (
+                {!!topics?.items.length && !!(topics?.items.length > 0) && (
                   <TopicCard
                     topicName={topics.items[0].name}
                     displayName={topics.items[0].display_name}
@@ -139,6 +143,7 @@ const HomePage: NextPage = () => {
                           'list-none',
                           'px-3 py-[3px] text-xs leading-5',
                           'border-[rgba(240,246,252,0.1)] bg-[#21262d] text-[#c9d1d9]',
+                          'border hover:border-fg-muted hover:bg-header-search-border-clr',
                           'relative inline-block cursor-pointer select-none appearance-none whitespace-nowrap rounded-md border align-middle'
                         )}
                       >
@@ -176,6 +181,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(0);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 0 && 'hidden'
+                                )}
+                              />
                               <span>Best Match</span>
                             </button>
                           )}
@@ -195,6 +206,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(1);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 1 && 'hidden'
+                                )}
+                              />
                               <span>Most Stars</span>
                             </button>
                           )}
@@ -214,6 +231,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(2);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 2 && 'hidden'
+                                )}
+                              />
                               <span>Fewest Stars</span>
                             </button>
                           )}
@@ -233,6 +256,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(3);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 3 && 'hidden'
+                                )}
+                              />
                               <span>Most Forks</span>
                             </button>
                           )}
@@ -252,6 +281,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(4);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 4 && 'hidden'
+                                )}
+                              />
                               <span>Fewest Forks</span>
                             </button>
                           )}
@@ -271,6 +306,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(5);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 5 && 'hidden'
+                                )}
+                              />
                               <span>Recently updated</span>
                             </button>
                           )}
@@ -290,6 +331,12 @@ const HomePage: NextPage = () => {
                                 setActiveSort(6);
                               }}
                             >
+                              <GitHubCheck
+                                className={clsxm(
+                                  'float-left -ml-5',
+                                  activeSort !== 6 && 'hidden'
+                                )}
+                              />
                               <span>Least recently updated</span>
                             </button>
                           )}
@@ -321,11 +368,20 @@ const HomePage: NextPage = () => {
                         license={license}
                         updatedAt={updated_at}
                         stars={stargazers_count}
-                        q='javascript'
+                        q={searchInput ?? ''}
                       />
                     )
                   )}
                 </ul>
+                <Pagination
+                  pageCount={Math.min(
+                    Math.ceil(repos?.total_count ?? 0 / 10),
+                    100
+                  )}
+                  currentPage={page}
+                  onPageChange={({ selected }) => setPage(selected)}
+                  className='mb-20'
+                />
               </div>
             </div>
           </div>
