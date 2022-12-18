@@ -1,10 +1,11 @@
 import '@/styles/globals.css';
 
 import { Noto_Sans } from '@next/font/google';
-import axios from 'axios';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from 'next-themes';
 import { SWRConfig } from 'swr';
+
+import customAxios from '@/lib/customAxios';
 
 declare module 'next-themes' {
   interface ThemeProviderProps {
@@ -23,7 +24,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <ThemeProvider attribute='class'>
       <SWRConfig
         value={{
-          fetcher: (url) => axios.get(url).then((res) => res.data),
+          fetcher: (url) => customAxios.get(url).then((res) => res.data),
         }}
       >
         <style jsx global>{`

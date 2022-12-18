@@ -3,7 +3,6 @@ import { GoChevronDown, GoMarkGithub } from 'react-icons/go';
 import HeaderSearchKeySlash from '@/components/icons/HeaderSearchKeySlash';
 import HeaderLink from '@/components/links/HeaderLink';
 import UnstyledLink from '@/components/links/UnstyledLink';
-import PageProgress from '@/components/PageProgress';
 import clsxm from '@/lib/clsxm';
 
 type Links = {
@@ -30,8 +29,10 @@ const navs: Navs[] = [
 const Header = ({ ...rest }: React.ComponentPropsWithoutRef<'header'>) => {
   return (
     <div className='relative'>
-      <PageProgress color='#ff9a9a' />
-      <header className={clsxm('relative bg-header-bg py-4')} {...rest}>
+      <header
+        className={clsxm('relative bg-header-bg py-4 text-white')}
+        {...rest}
+      >
         <div className='relative mx-auto flex h-full max-w-7xl items-center px-4'>
           <div className='flex w-full items-center justify-between lg:w-auto'>
             <UnstyledLink href='/' className='mr-4'>
@@ -95,7 +96,12 @@ const Header = ({ ...rest }: React.ComponentPropsWithoutRef<'header'>) => {
                 <div className='relative inline-block lg:mr-4'>
                   <HeaderLink href='/login'>Sign in</HeaderLink>
                 </div>
-                <HeaderLink href='/signup' className='!px-2 py-1 flex-shrink-0 rounded-md border border-header-search-border-clr'>Sign up</HeaderLink>
+                <HeaderLink
+                  href='/signup'
+                  className='flex-shrink-0 rounded-md border border-header-search-border-clr !px-2 py-1'
+                >
+                  Sign up
+                </HeaderLink>
               </div>
             </div>
           </div>

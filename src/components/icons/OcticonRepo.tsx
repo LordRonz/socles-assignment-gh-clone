@@ -13,7 +13,7 @@ const OcticonRepo = ({
       version='1.1'
       width='16'
       data-view-component='true'
-      className={clsxm('fill-[#6a737d]', className)}
+      className={clsxm('inline-block fill-[#6a737d]', className)}
       {...rest}
     >
       <path

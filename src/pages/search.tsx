@@ -1,12 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
 import type { NextPage } from 'next';
+import queryString from 'query-string';
+import useSWR from 'swr';
 
 import RepoListItem from '@/components/Card/RepoListItem';
+import TopicCard from '@/components/Card/TopicCard';
 import Header from '@/components/layout/Header';
 import GitHubLink from '@/components/links/GitHubLink';
 import SideNavLink from '@/components/links/SideNavLink';
 import Seo from '@/components/Seo';
 import SideNavTag from '@/components/tag/SideNavTag';
+import { RepoSearchResponse } from '@/types/search';
+import { TopicSearchResponse } from '@/types/topicSearch';
 
 const navs = [
   {
@@ -25,7 +30,27 @@ const navs = [
   },
 ];
 
-const Home: NextPage = () => {
+const SearchPage: NextPage = () => {
+  const { data: repos } = useSWR<RepoSearchResponse>(
+    queryString.stringifyUrl({
+      url: '/search/repositories',
+      query: {
+        q: 'javascript',
+        per_page: '10',
+      },
+    })
+  );
+
+  const { data: topics } = useSWR<TopicSearchResponse>(
+    queryString.stringifyUrl({
+      url: '/search/topics',
+      query: {
+        q: 'javascript',
+        per_page: '1',
+      },
+    })
+  );
+
   return (
     <>
       <Seo />
@@ -69,12 +94,45 @@ const Home: NextPage = () => {
             </div>
             <div className='float-left w-full px-2 pt-4 md:w-9/12 md:pt-0 '>
               <div className='px-2'>
+                {topics?.items.length && !!(topics?.items.length > 0) && (
+                  <TopicCard
+                    topicName={topics.items[0].name}
+                    displayName={topics.items[0].display_name}
+                    shortDescription={topics.items[0].short_description}
+                  />
+                )}
                 <div className='relative flex justify-between border-b border-header-search-border-clr pb-4'>
-                  <h3 className='text-xl'>1,539,844 repository results</h3>
-                  <details className='hidden md:block mt-0'></details>
+                  <h3 className='text-xl'>
+                    {(repos?.total_count ?? 0).toLocaleString()} repository
+                    results
+                  </h3>
+                  <details className='mt-0 hidden md:block'></details>
                 </div>
                 <ul className='relative'>
-                  <RepoListItem />
+                  {repos?.items.map(
+                    (
+                      {
+                        full_name,
+                        description,
+                        topics,
+                        language,
+                        license,
+                        updated_at,
+                      },
+                      i
+                    ) => (
+                      <RepoListItem
+                        key={`${full_name}-${i}`}
+                        fullName={full_name}
+                        description={description}
+                        topics={topics}
+                        language={language}
+                        license={license}
+                        updatedAt={updated_at}
+                        q='javascript'
+                      />
+                    )
+                  )}
                 </ul>
               </div>
             </div>
@@ -85,4 +143,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default SearchPage;
