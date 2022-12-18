@@ -17,6 +17,7 @@ export type RepoListItemProps = {
   topics: string[];
   language: string | null;
   license: License | null;
+  stars: number;
   updatedAt: string | null;
 } & React.ComponentPropsWithoutRef<'li'>;
 
@@ -29,6 +30,7 @@ const RepoListItem = ({
   language,
   license,
   updatedAt,
+  stars,
   ...rest
 }: RepoListItemProps) => {
   const fullNameArr = fullName.split(q.trim().toLowerCase());
@@ -47,7 +49,10 @@ const RepoListItem = ({
       <div className='-mt-1 flex-auto'>
         <div className='flex'>
           <div className='text-base font-normal'>
-            <GitHubLink href='#' className='align-middle'>
+            <GitHubLink
+              href={`https://github.com/${fullName}`}
+              className='align-middle'
+            >
               {fullNameArr.map((item, index) => (
                 <>
                   {item}
@@ -74,10 +79,10 @@ const RepoListItem = ({
           <div className='flex flex-wrap space-x-4 text-xs text-fg-muted'>
             <div>
               <UnstyledLink
-                href='#'
+                href={`https://github.com/${fullName}/stargazers`}
                 className='text-fg-muted hover:text-color-fg'
               >
-                <GitHubStar /> {nFormatter(129718, 1)}
+                <GitHubStar /> {nFormatter(stars, 1)}
               </UnstyledLink>
             </div>
             {language && (

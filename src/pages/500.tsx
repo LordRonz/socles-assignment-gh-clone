@@ -13,7 +13,7 @@ const NotFound: NextPage = () => (
             <h2>Internal Server Error</h2>
           </div>
 
-          <p className='text-xl text-primary-400 dark:text-primary-200'>
+          <p className='text-xl'>
             Sorry, there must be something wrong, please try again
           </p>
         </div>

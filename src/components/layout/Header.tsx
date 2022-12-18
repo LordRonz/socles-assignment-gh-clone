@@ -1,4 +1,6 @@
+import { useRef, useState } from 'react';
 import { GoChevronDown, GoMarkGithub } from 'react-icons/go';
+import { useKey } from 'react-use';
 
 import HeaderSearchKeySlash from '@/components/icons/HeaderSearchKeySlash';
 import HeaderLink from '@/components/links/HeaderLink';
@@ -26,7 +28,19 @@ const navs: Navs[] = [
   { label: 'Open Source' },
 ];
 
-const Header = ({ ...rest }: React.ComponentPropsWithoutRef<'header'>) => {
+export type HeaderProps = {
+  onSubmit: (s: string) => void;
+} & Omit<React.ComponentPropsWithoutRef<'header'>, 'onSubmit'>;
+
+const Header = ({ onSubmit, ...rest }: HeaderProps) => {
+  const [inputString, setInputString] = useState<string>();
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useKey('/', () => {
+    inputRef.current?.focus();
+  });
+
   return (
     <div className='relative'>
       <header
@@ -72,11 +86,16 @@ const Header = ({ ...rest }: React.ComponentPropsWithoutRef<'header'>) => {
                   <div className='min-w-auto relative mr-4 w-60 max-w-[272px] flex-auto self-auto'>
                     <div className='relative'>
                       <form
-                        action='/search'
                         method='get'
                         role='search'
                         acceptCharset='UTF-8'
                         aria-label='Site'
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if (!inputString) return;
+                          onSubmit(inputString.trim());
+                        }}
                       >
                         <label
                           htmlFor=''
@@ -84,8 +103,13 @@ const Header = ({ ...rest }: React.ComponentPropsWithoutRef<'header'>) => {
                         >
                           <input
                             type='text'
+                            ref={inputRef}
                             className='peer table-cell w-full appearance-none overflow-visible rounded-md bg-black py-2 px-3 text-sm outline-none placeholder:text-[#6e7681] placeholder:focus:text-white/75'
                             placeholder='Search GitHub'
+                            onChange={(e) => {
+                              e.preventDefault();
+                              setInputString(e.currentTarget.value);
+                            }}
                           />
                           <HeaderSearchKeySlash className='peer-focus:hidden' />
                         </label>
