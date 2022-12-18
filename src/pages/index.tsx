@@ -54,6 +54,8 @@ const HomePage: NextPage = () => {
   const [activeSort, setActiveSort] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
 
+  console.log(page);
+
   const { data: repos } = useSWR<RepoSearchResponse>(
     searchInput
       ? queryString.stringifyUrl({
@@ -378,8 +380,8 @@ const HomePage: NextPage = () => {
                     Math.ceil(repos?.total_count ?? 0 / 10),
                     100
                   )}
-                  currentPage={page}
-                  onPageChange={({ selected }) => setPage(selected)}
+                  currentPage={page - 1}
+                  onPageChange={({ selected }) => setPage(selected + 1)}
                   className='mb-20'
                 />
               </div>
