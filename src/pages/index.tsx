@@ -54,8 +54,6 @@ const HomePage: NextPage = () => {
   const [activeSort, setActiveSort] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
 
-  console.log(page);
-
   const { data: repos } = useSWR<RepoSearchResponse>(
     searchInput
       ? queryString.stringifyUrl({
