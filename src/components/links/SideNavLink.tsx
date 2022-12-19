@@ -16,9 +16,9 @@ const SideNavLink = ({
   <UnstyledLink
     {...rest}
     className={clsxm(
-      'relative border-b border-muted p-2 text-text-color-fg block text-sm px-4',
+      'relative block border-b border-muted p-2 px-4 text-sm text-text-color-fg hover:bg-neutral-subtle',
       active &&
-        "before:content-[''] before:absolute before:bottom-0 before:left-0 before:top-0 before:w-0.5 before:bg-border-active",
+        "before:absolute before:bottom-0 before:left-0 before:top-0 before:w-0.5 before:bg-border-active before:content-['']",
       active && 'cursor-default bg-menu-bg-active',
       'first:rounded-tl-md first:rounded-tr-md first:border-t-0',
       className

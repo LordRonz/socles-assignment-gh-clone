@@ -6,29 +6,26 @@ import { useState } from 'react';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import useSWR from 'swr';
 
-import RepoListItem from '@/components/Card/RepoListItem';
-import TopicCard from '@/components/Card/TopicCard';
+import UserListItem from '@/components/Card/UserListItem';
 import GitHubCheck from '@/components/icons/GitHubCheck';
 import Header from '@/components/layout/Header';
 import SideNav from '@/components/layout/SideNav';
-import GitHubLink from '@/components/links/GitHubLink';
 import Pagination from '@/components/Pagination';
 import Seo from '@/components/Seo';
 import clsxm from '@/lib/clsxm';
-import { RepoSearchResponse } from '@/types/search';
-import { TopicSearchResponse } from '@/types/topicSearch';
+import { UserSearchResponse } from '@/types/userSearch';
 
 const sortingOptions = [
   'Best match',
-  'Most stars',
-  'Fewest stars',
-  'Most forks',
-  'Fewest forks',
-  'Recently updated',
-  'Least recently updated',
+  'Most followers',
+  'Fewest followers',
+  'Most recently joined',
+  'Least recently joined',
+  'Most repositories',
+  'Fewest repositories',
 ];
 
-const HomePage: NextPage = () => {
+const UserPage: NextPage = () => {
   const [searchInput, setSearchInput] = useState<string>();
 
   const [sortBy, setSortBy] = useState<string>();
@@ -36,28 +33,16 @@ const HomePage: NextPage = () => {
   const [activeSort, setActiveSort] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
 
-  const { data: repos } = useSWR<RepoSearchResponse>(
+  const { data: users } = useSWR<UserSearchResponse>(
     searchInput
       ? queryString.stringifyUrl({
-          url: '/search/repositories',
+          url: '/search/users',
           query: {
             q: searchInput,
             per_page: '10',
             ...(sortBy && { sort: sortBy }),
             ...(sortOrder && { order: sortOrder }),
             page,
-          },
-        })
-      : null
-  );
-
-  const { data: topics } = useSWR<TopicSearchResponse>(
-    searchInput
-      ? queryString.stringifyUrl({
-          url: '/search/topics',
-          query: {
-            q: searchInput,
-            per_page: '1',
           },
         })
       : null
@@ -71,43 +56,13 @@ const HomePage: NextPage = () => {
         <main>
           <div className='mx-auto max-w-5xl md:px-2 lg:mt-6'>
             <div className='float-left w-full md:w-3/12 md:px-2'>
-              <SideNav activeIndex={0} />
-              <div className='mb-4 hidden rounded-md border border-header-search-border-clr p-4 md:block'>
-                <h2 className='mb-2 inline-block text-sm'>Languages</h2>
-                <ul className='list-none'>
-                  <li>
-                    <a
-                      href='#'
-                      className='relative mb-1 block overflow-hidden overflow-ellipsis whitespace-nowrap rounded-md py-1.5 px-3 text-xs text-fg-muted hover:bg-canvas-subtle'
-                    >
-                      <span className='float-right font-semibold'>811,258</span>
-                      JavaScript
-                    </a>
-                  </li>
-                </ul>
-              </div>
-              <div className='mt-4 hidden md:block'>
-                <GitHubLink
-                  href='/search/advanced?q=javascript&type=Repositories'
-                  className='text-xs'
-                >
-                  Advanced search
-                </GitHubLink>
-              </div>
+              <SideNav activeIndex={1} />
             </div>
             <div className='float-left w-full px-2 pt-4 md:w-9/12 md:pt-0 '>
               <div className='px-2'>
-                {!!topics?.items.length && !!(topics?.items.length > 0) && (
-                  <TopicCard
-                    topicName={topics.items[0].name}
-                    displayName={topics.items[0].display_name}
-                    shortDescription={topics.items[0].short_description}
-                  />
-                )}
                 <div className='relative flex justify-between border-b border-header-search-border-clr pb-4'>
                   <h3 className='text-xl'>
-                    {(repos?.total_count ?? 0).toLocaleString()} repository
-                    results
+                    {(users?.total_count ?? 0).toLocaleString()} users
                   </h3>
                   <Menu as='div' className='relative z-[69] bg-canvas-subtle'>
                     <Menu.Button>
@@ -160,7 +115,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 0 && 'hidden'
                                 )}
                               />
-                              <span>Best Match</span>
+                              <span>{sortingOptions[0]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -174,7 +129,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('stars');
+                                setSortBy('followers');
                                 setSortOrder(undefined);
                                 setActiveSort(1);
                               }}
@@ -185,7 +140,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 1 && 'hidden'
                                 )}
                               />
-                              <span>Most Stars</span>
+                              <span>{sortingOptions[1]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -199,7 +154,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('stars');
+                                setSortBy('followers');
                                 setSortOrder('asc');
                                 setActiveSort(2);
                               }}
@@ -210,7 +165,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 2 && 'hidden'
                                 )}
                               />
-                              <span>Fewest Stars</span>
+                              <span>{sortingOptions[2]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -224,7 +179,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('forks');
+                                setSortBy('joined');
                                 setSortOrder(undefined);
                                 setActiveSort(3);
                               }}
@@ -235,7 +190,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 3 && 'hidden'
                                 )}
                               />
-                              <span>Most Forks</span>
+                              <span>{sortingOptions[3]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -249,7 +204,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('forks');
+                                setSortBy('joined');
                                 setSortOrder('asc');
                                 setActiveSort(4);
                               }}
@@ -260,7 +215,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 4 && 'hidden'
                                 )}
                               />
-                              <span>Fewest Forks</span>
+                              <span>{sortingOptions[4]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -274,7 +229,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('updated');
+                                setSortBy('repositories');
                                 setSortOrder(undefined);
                                 setActiveSort(5);
                               }}
@@ -285,7 +240,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 5 && 'hidden'
                                 )}
                               />
-                              <span>Recently updated</span>
+                              <span>{sortingOptions[5]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -299,7 +254,7 @@ const HomePage: NextPage = () => {
                                 active && 'bg-accent-emphasis text-white'
                               )}
                               onClick={() => {
-                                setSortBy('updated');
+                                setSortBy('repositories');
                                 setSortOrder('asc');
                                 setActiveSort(6);
                               }}
@@ -310,7 +265,7 @@ const HomePage: NextPage = () => {
                                   activeSort !== 6 && 'hidden'
                                 )}
                               />
-                              <span>Least recently updated</span>
+                              <span>{sortingOptions[6]}</span>
                             </button>
                           )}
                         </Menu.Item>
@@ -319,36 +274,18 @@ const HomePage: NextPage = () => {
                   </Menu>
                 </div>
                 <ul className='relative'>
-                  {repos?.items.map(
-                    (
-                      {
-                        full_name,
-                        description,
-                        topics,
-                        language,
-                        license,
-                        updated_at,
-                        stargazers_count,
-                      },
-                      i
-                    ) => (
-                      <RepoListItem
-                        key={`${full_name}-${i}`}
-                        fullName={full_name}
-                        description={description}
-                        topics={topics}
-                        language={language}
-                        license={license}
-                        updatedAt={updated_at}
-                        stars={stargazers_count}
-                        q={searchInput ?? ''}
-                      />
-                    )
-                  )}
+                  {users?.items.map(({ login, html_url, avatar_url }, i) => (
+                    <UserListItem
+                      key={`${login}-${i}`}
+                      htmlUrl={html_url}
+                      avatarUrl={avatar_url}
+                      name={login}
+                    />
+                  ))}
                 </ul>
                 <Pagination
                   pageCount={Math.min(
-                    Math.ceil((repos?.total_count ?? 0) / 10),
+                    Math.ceil((users?.total_count ?? 0) / 10),
                     100
                   )}
                   currentPage={page - 1}
@@ -364,4 +301,4 @@ const HomePage: NextPage = () => {
   );
 };
 
-export default HomePage;
+export default UserPage;

@@ -42,6 +42,7 @@ module.exports = {
         'canvas-subtle': '#161b22',
         'neutral-emphasis': '#6e7681',
         'neutral-muted': 'rgba(110,118,129,0.4)',
+        'neutral-subtle': 'rgba(110,118,129,0.1)',
         'fg-disabled': '#484f58',
         dark: '#161b22',
       },
