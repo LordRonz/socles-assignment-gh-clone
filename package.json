@@ -37,7 +37,7 @@
     "react-paginate": "^8.1.4",
     "react-use": "^17.4.0",
     "swr": "^2.0.0",
-    "tailwind-merge": "^1.8.0"
+    "tailwind-merge": "^1.9.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
